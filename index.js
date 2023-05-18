@@ -51,43 +51,44 @@ const pizzas = [
 // Aca empieza mi codigo
 const form = document.getElementById("form");
 const container = document.getElementById("container");
-const input = document.getElementById("input-number");
-const btn = document.getElementById("btn")
+const inputNum = document.getElementById("input-number");
+const btn = document.getElementById("btn");
 
-let inputARenderizar = JSON.parse(localStorage.getItem("ultimaPizza")) || [];
+const getPizzaId = () => {
+  return parseInt(localStorage.getItem("ultimaPizza")) || 0;
+};
 
-// si esta vacio
-const  isEmpty = (input) =>{
+const setPizzaId = (pizzaId) => {
+  localStorage.setItem("ultimaPizza", pizzaId);
+};
+
+const isEmpty = (input) => {
   return !input.value.length;
-}
+};
 
-//mostrar error
 const showError = (input, msj) => {
   const formField = input.parentElement;
   formField.classList.add("incorrect");
   formField.classList.remove("correct");
   const error = formField.querySelector("small");
   error.style.display = "block";
-  error.style.color = "red"
+  error.style.color = "red";
   error.textContent = msj;
-}
+};
 
-//si todo esta bien
 const showSuccess = (input) => {
   const formField = input.parentElement;
-  formField.classList.add("correct")
+  formField.classList.add("correct");
   formField.classList.remove("incorrect");
   const error = formField.querySelector("small");
   error.style.display = "none";
   error.textContent = "";
-}
+};
 
-// si el numero existe
 const existsNum = (input) => {
-  return pizzas.some(pizza => pizza.id === parseInt(input.value));
-}
+  return pizzas.some((pizza) => pizza.id === parseInt(input.value));
+};
 
-// crear la card
 const createCard = (pizza) => {
   return `
     <div class="info">
@@ -99,7 +100,6 @@ const createCard = (pizza) => {
   `;
 };
 
-//----------------------------validacion de input--------------------------------------
 const checkNumInput = (input) => {
   let valid = false;
   if (isEmpty(input)) {
@@ -113,31 +113,31 @@ const checkNumInput = (input) => {
   showSuccess(input);
   valid = true;
   return valid;
-}
+};
 
-//Mostrar la card y guardarla
-const renderCard = (input) => {
-  const pizzaId = parseInt(input.value);
-  const pizza = pizzas.find(pizza => pizza.id === pizzaId);
+const renderCard = () => {
+  const pizzaId = parseInt(inputNum.value);
+  const pizza = pizzas.find((pizza) => pizza.id === pizzaId);
   if (pizza) {
     container.innerHTML = createCard(pizza);
-    localStorage.setItem('ultimaPizza', JSON.stringify(pizza));
+    setPizzaId(pizzaId);
   } else {
     container.innerHTML = "";
+    setPizzaId(0);
   }
 };
 
-//prevengo que se recargue
-const submitHandler =(e) => {
+const submitHandler = (e) => {
   e.preventDefault();
   form.reset();
 };
 
 const init = () => {
   form.addEventListener("submit", submitHandler);
-  input.addEventListener("input", () => checkNumInput(input));
-  btn.addEventListener("click", () => renderCard(input));
-
+  inputNum.addEventListener("input", () => checkNumInput(inputNum));
+  btn.addEventListener("click", renderCard);
+  inputNum.value = getPizzaId(); // Carga la ultima pizza
+  renderCard();
 };
 
 init();
