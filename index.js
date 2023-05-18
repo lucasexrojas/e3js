@@ -90,13 +90,14 @@ const existsNum = (input) => {
 };
 
 const createCard = (pizza) => {
+  const {nombre, precio, ingredientes, imagen} = pizza;
   return `
     <div class="info">
-      <h2>${pizza.nombre}</h2>
-      <p class="price">$${pizza.precio}</p>
-      <p class="ingredients">${pizza.ingredientes.join(", ")}</p>
+      <h2>${nombre}</h2>
+      <p class="price">$${precio}</p>
+      <p class="ingredients">${ingredientes.join(", ")}</p>
     </div>
-    <img class="img" src="${pizza.imagen}" alt="${pizza.nombre}">
+    <img class="img" src="${imagen}" alt="${nombre}">
   `;
 };
 
